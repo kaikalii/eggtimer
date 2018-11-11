@@ -76,6 +76,10 @@ impl EggTimer {
     pub fn is_ready(self) -> bool {
         self.time_left() <= 0.0
     }
+    /// Gets the number of seconds the `EggTimer` was originally set with
+    pub fn max_time(&self) -> f64 {
+        self.dur
+    }
 }
 
 /// An alarm that calls a function when it is ready
@@ -121,5 +125,86 @@ where
     /// Blocks the current thread until the `Alarm` goes off
     pub fn join(self) -> thread::Result<T> {
         self.handle.join()
+    }
+}
+
+/// An iterable list structure where each element has an associated duration.
+/// When an element's duration has elapsed, the element is removed from the
+/// list upon the next mutable function call.
+#[derive(Debug, Clone, PartialEq, PartialOrd, Default)]
+pub struct TimedList<T> {
+    list: Vec<(EggTimer, T)>,
+}
+
+impl<T> TimedList<T> {
+    /// Creates a new `TimedList`
+    pub fn new() -> TimedList<T> {
+        TimedList { list: Vec::new() }
+    }
+    /// Inserts and element into the list with the given duration
+    pub fn insert(&mut self, element: T, duration: f64) {
+        self.list.push((EggTimer::set(duration), element));
+    }
+    /// Forces the removal of all elements whose duration has elpased.
+    /// This method does not need to be called manually.
+    pub fn clean(&mut self) {
+        self.list.retain(|(timer, _)| !timer.is_ready());
+    }
+    /// Removes all elements from the list
+    pub fn clear(&mut self) {
+        self.list.clear();
+    }
+    /// Iterates immutably through all elements.
+    /// While this method does not remove timed-out elements,
+    /// it does filter them out.
+    /// If iteration takes sufficiently long, elements that
+    /// may have been valid when iteration began may be skipped
+    /// when they are atually iterated over.
+    pub fn iter(&self) -> impl Iterator<Item = &T> {
+        self.list.iter().filter_map(
+            |(timer, elem)| {
+                if timer.is_ready() {
+                    None
+                } else {
+                    Some(elem)
+                }
+            },
+        )
+    }
+    /// Iterates mutably through all elements.
+    /// If iteration takes sufficiently long, elements that
+    /// may have been valid when iteration began may be skipped
+    /// when they are atually iterated over.
+    pub fn iter_mut(&mut self) -> impl Iterator<Item = &mut T> {
+        self.clean();
+        self.list.iter_mut().filter_map(
+            |(timer, elem)| {
+                if timer.is_ready() {
+                    None
+                } else {
+                    Some(elem)
+                }
+            },
+        )
+    }
+}
+
+impl<T> IntoIterator for TimedList<T>
+where
+    T: 'static,
+{
+    type Item = T;
+    type IntoIter = Box<Iterator<Item = T>>;
+    fn into_iter(mut self) -> Self::IntoIter {
+        self.clean();
+        Box::new(self.list.into_iter().filter_map(
+            |(timer, elem)| {
+                if timer.is_ready() {
+                    None
+                } else {
+                    Some(elem)
+                }
+            },
+        ))
     }
 }
