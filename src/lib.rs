@@ -198,6 +198,14 @@ impl EggTimer {
     pub fn max_seconds(&self) -> f64 {
         f64::from_duration(self.max_duration())
     }
+    /// Gets the elapsed time as a floating-point number of seconds
+    pub fn elapsed(&self) -> f64 {
+        self.timer.elapsed()
+    }
+    /// Get the elapsed time as a `Duration`
+    pub fn duration(&self) -> Duration {
+        self.timer.duration()
+    }
     /// Gets the `Instant` at which the `EggTimer` was started
     pub fn started_at(&self) -> Instant {
         self.timer.started_at()

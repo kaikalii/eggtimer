@@ -14,7 +14,7 @@ To use this crate, add this to your `Cargo.toml`:
 
 ```toml
 [dependencies]
-eggtimer = "0.1.0"
+eggtimer = "0.2.0"
 ```
 
 ### Example
