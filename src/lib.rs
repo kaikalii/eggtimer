@@ -338,7 +338,7 @@ impl<T> TimedList<T> {
     /// If iteration takes sufficiently long, elements that
     /// may have been valid when iteration began may be skipped
     /// when they are atually iterated over.
-    pub fn iter(&self) -> impl Iterator<Item = &T> {
+    pub fn iter(&self) -> impl DoubleEndedIterator<Item = &T> {
         self.list.iter().filter_map(
             |(timer, elem)| {
                 if timer.is_ready() {
@@ -354,7 +354,7 @@ impl<T> TimedList<T> {
     /// If iteration takes sufficiently long, elements that
     /// may have been valid when iteration began may be skipped
     /// when they are atually iterated over.
-    pub fn iter_mut(&mut self) -> impl Iterator<Item = &mut T> {
+    pub fn iter_mut(&mut self) -> impl DoubleEndedIterator<Item = &mut T> {
         self.clean();
         self.list.iter_mut().filter_map(
             |(timer, elem)| {
@@ -373,7 +373,7 @@ impl<T> TimedList<T> {
     /// If iteration takes sufficiently long, elements that
     /// may have been valid when iteration began may be skipped
     /// when they are atually iterated over.
-    pub fn timer_iter(&self) -> impl Iterator<Item = (&T, EggTimer)> {
+    pub fn timer_iter(&self) -> impl DoubleEndedIterator<Item = (&T, EggTimer)> {
         self.list.iter().filter_map(|(timer, elem)| {
             if timer.is_ready() {
                 None
@@ -387,7 +387,7 @@ impl<T> TimedList<T> {
     /// If iteration takes sufficiently long, elements that
     /// may have been valid when iteration began may be skipped
     /// when they are atually iterated over.
-    pub fn timer_iter_mut(&mut self) -> impl Iterator<Item = (&mut T, EggTimer)> {
+    pub fn timer_iter_mut(&mut self) -> impl DoubleEndedIterator<Item = (&mut T, EggTimer)> {
         self.clean();
         self.list.iter_mut().filter_map(|(timer, elem)| {
             if timer.is_ready() {
@@ -418,7 +418,7 @@ where
     T: 'static,
 {
     type Item = T;
-    type IntoIter = Box<Iterator<Item = T>>;
+    type IntoIter = Box<DoubleEndedIterator<Item = T>>;
     fn into_iter(mut self) -> Self::IntoIter {
         self.clean();
         Box::new(self.list.into_iter().filter_map(
