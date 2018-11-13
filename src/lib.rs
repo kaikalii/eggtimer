@@ -25,7 +25,7 @@ impl ToDuration for Duration {
 impl ToDuration for f32 {
     fn to_duration(&self) -> Duration {
         if self < &0.0 {
-            panic!("Attempted to convert negative floating-point number to Duration");
+            panic!("Attempted to convert negative f32 number to Duration");
         }
         let whole = *self as u64;
         let fract = (self.fract() * 1e9) as u32;
@@ -36,7 +36,7 @@ impl ToDuration for f32 {
 impl ToDuration for f64 {
     fn to_duration(&self) -> Duration {
         if self < &0.0 {
-            panic!("Attempted to convert negative floating-point number to Duration");
+            panic!("Attempted to convert negative f64 number to Duration");
         }
         let whole = *self as u64;
         let fract = (self.fract() * 1e9) as u32;
