@@ -324,6 +324,13 @@ impl<T> TimedList<T> {
     pub fn len(&self) -> usize {
         self.iter().count()
     }
+    /// Retains elements in the list that match the predicate
+    pub fn retain<F>(&mut self, mut f: F)
+    where
+        F: FnMut(&T) -> bool,
+    {
+        self.list.retain(|(_, elem)| f(elem));
+    }
     /// Iterates immutably through all elements.
     ///
     /// While this method does not remove timed-out elements,
@@ -389,6 +396,20 @@ impl<T> TimedList<T> {
                 Some((elem, *timer))
             }
         })
+    }
+}
+
+impl<T, D> std::iter::FromIterator<(T, D)> for TimedList<T>
+where
+    D: ToDuration,
+{
+    fn from_iter<I: IntoIterator<Item = (T, D)>>(iter: I) -> Self {
+        TimedList {
+            list: iter
+                .into_iter()
+                .map(|(x, d)| (EggTimer::set(d), x))
+                .collect(),
+        }
     }
 }
 
