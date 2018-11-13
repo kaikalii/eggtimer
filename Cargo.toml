@@ -3,5 +3,13 @@ name = "eggtimer"
 version = "0.1.0"
 authors = ["Kai Schmidt <kaikaliischmidt@gmail.com>"]
 edition = "2018"
-
-[dependencies]
+categories = ["data-and-time"]
+description = "Timer types for measuring time in a program in different ways"
+documentation = "https://docs.rs/eggtimer/"
+keywords = [
+    "timer",
+    "time",
+    "duration"
+]
+license = "MIT"
+readme = "readme.md"
