@@ -6,7 +6,7 @@
 //! - `Stopwatch` is a timer that counts up and can be paused and resumed.
 //!
 //! In addition to the timer types, a collection type, `TimedList`, is provided,
-//! which associates each element with a `Duration` and only retains elements whose `Duration` has not elapsed
+//! which associates each element with a `Duration` and only retains elements whose `Duration` has not elapsed.
 
 use std::time::{Duration, Instant};
 
