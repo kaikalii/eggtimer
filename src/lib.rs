@@ -46,19 +46,19 @@ impl ToDuration for f64 {
 
 impl ToDuration for u8 {
     fn to_duration(&self) -> Duration {
-        Duration::new(*self as u64, 0)
+        Duration::new(u64::from(*self), 0)
     }
 }
 
 impl ToDuration for u16 {
     fn to_duration(&self) -> Duration {
-        Duration::new(*self as u64, 0)
+        Duration::new(u64::from(*self), 0)
     }
 }
 
 impl ToDuration for u32 {
     fn to_duration(&self) -> Duration {
-        Duration::new(*self as u64, 0)
+        Duration::new(u64::from(*self), 0)
     }
 }
 
@@ -100,7 +100,7 @@ impl FromDuration for u64 {
 
 impl FromDuration for u128 {
     fn from_duration(duration: Duration) -> Self {
-        duration.as_secs() as u128
+        u128::from(duration.as_secs())
     }
 }
 
@@ -140,15 +140,15 @@ impl Timer {
         self.start = Instant::now();
     }
     /// Gets the elapsed time as a floating-point number of seconds
-    pub fn elapsed(&self) -> f64 {
+    pub fn elapsed(self) -> f64 {
         f64::from_duration(self.duration())
     }
     /// Get the elapsed time as a `Duration`
-    pub fn duration(&self) -> Duration {
+    pub fn duration(self) -> Duration {
         Instant::now().duration_since(self.start)
     }
     /// Gets the `Instant` at which the `Timer` was started
-    pub fn started_at(&self) -> Instant {
+    pub fn started_at(self) -> Instant {
         self.start
     }
 }
@@ -306,7 +306,7 @@ impl<T> TimedList<T> {
     pub fn new() -> TimedList<T> {
         TimedList { list: Vec::new() }
     }
-    /// Inserts and element into the list with the given number of floating-point seconds
+    /// Inserts an element into the list with the given number of floating-point seconds
     pub fn insert<D: ToDuration>(&mut self, element: T, time: D) {
         self.list.push((EggTimer::set(time), element));
     }
@@ -323,6 +323,10 @@ impl<T> TimedList<T> {
     /// Gets the number of elements in the list that have not timed out.
     pub fn len(&self) -> usize {
         self.iter().count()
+    }
+    /// Check if the list is empty or if all existing elements have timed out.
+    pub fn is_empty(&self) -> bool {
+        self.len() == 0
     }
     /// Retains elements in the list that match the predicate
     pub fn retain<F>(&mut self, mut f: F)

@@ -1,6 +1,6 @@
 [package]
 name = "eggtimer"
-version = "0.3.1"
+version = "0.3.2"
 authors = ["Kai Schmidt <kaikaliischmidt@gmail.com>"]
 edition = "2018"
 categories = ["date-and-time"]
