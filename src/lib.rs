@@ -341,7 +341,7 @@ impl<T> TimedList<T> {
     /// it does filter them out.
     /// If iteration takes sufficiently long, elements that
     /// may have been valid when iteration began may be skipped
-    /// when they are atually iterated over.
+    /// when they are actually iterated over.
     pub fn iter(&self) -> impl DoubleEndedIterator<Item = &T> {
         self.list.iter().filter_map(
             |(timer, elem)| {
@@ -357,7 +357,7 @@ impl<T> TimedList<T> {
     ///
     /// If iteration takes sufficiently long, elements that
     /// may have been valid when iteration began may be skipped
-    /// when they are atually iterated over.
+    /// when they are actually iterated over.
     pub fn iter_mut(&mut self) -> impl DoubleEndedIterator<Item = &mut T> {
         self.clean();
         self.list.iter_mut().filter_map(
@@ -376,7 +376,7 @@ impl<T> TimedList<T> {
     /// it does filter them out.
     /// If iteration takes sufficiently long, elements that
     /// may have been valid when iteration began may be skipped
-    /// when they are atually iterated over.
+    /// when they are actually iterated over.
     pub fn timer_iter(&self) -> impl DoubleEndedIterator<Item = (&T, EggTimer)> {
         self.list.iter().filter_map(|(timer, elem)| {
             if timer.is_ready() {
@@ -390,7 +390,7 @@ impl<T> TimedList<T> {
     ///
     /// If iteration takes sufficiently long, elements that
     /// may have been valid when iteration began may be skipped
-    /// when they are atually iterated over.
+    /// when they are actually iterated over.
     pub fn timer_iter_mut(&mut self) -> impl DoubleEndedIterator<Item = (&mut T, EggTimer)> {
         self.clean();
         self.list.iter_mut().filter_map(|(timer, elem)| {
@@ -435,4 +435,31 @@ where
             },
         ))
     }
+}
+
+/**
+Measure the amount of time the given function takes to execute
+
+Time is measured in floating-point number of seconds
+
+# Example
+```
+use eggtimer::measure;
+
+let elapsed = measure(|| {
+    for i in 0..1000 {
+        println!("{}", i);
+    }
+});
+
+println!("Printing all those numbers took {} seconds", elapsed);
+```
+*/
+pub fn measure<F>(f: F) -> f64
+where
+    F: FnOnce(),
+{
+    let timer = Timer::start();
+    f();
+    timer.elapsed()
 }
