@@ -190,6 +190,15 @@ impl EggTimer {
     pub fn is_ready(self) -> bool {
         self.duration_left().is_none()
     }
+    /// Checks if the set `Duration` has elapsed and returns the elapsed
+    /// floating-point number of seconds if it has
+    pub fn as_ready(self) -> Option<f64> {
+        if self.is_ready() {
+            Some(self.elapsed())
+        } else {
+            None
+        }
+    }
     /// Gets the time the `EggTimer` was originally set with as a `Duration`
     pub fn max_duration(&self) -> Duration {
         self.duration
@@ -213,6 +222,17 @@ impl EggTimer {
     /// Gets the `Instant` at which the `EggTimer` will or did end
     pub fn ends_at(&self) -> Instant {
         self.timer.started_at() + self.duration
+    }
+    /// If the timer is ready, runs the given function with the elapsed
+    /// floating-point number of seconds as a parameter and resets the timer
+    pub fn tick<F, R>(&mut self, mut f: F) -> Option<R>
+    where
+        F: FnMut(f64) -> R,
+    {
+        self.as_ready().map(|dt| {
+            self.reset();
+            f(dt)
+        })
     }
 }
 
@@ -422,7 +442,7 @@ where
     T: 'static,
 {
     type Item = T;
-    type IntoIter = Box<DoubleEndedIterator<Item = T>>;
+    type IntoIter = Box<dyn DoubleEndedIterator<Item = T>>;
     fn into_iter(mut self) -> Self::IntoIter {
         self.clean();
         Box::new(self.list.into_iter().filter_map(
