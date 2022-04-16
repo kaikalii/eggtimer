@@ -34,7 +34,7 @@ fn main() {
     computation();
 
     // Check how long it took
-    let elapsed = timer.get();
+    let elapsed = timer.seconds();
     println!("The computation took {} seconds.", elapsed);
 }
 ```
