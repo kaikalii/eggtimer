@@ -1,11 +1,15 @@
 [package]
-name = "eggtimer"
-version = "0.5.0"
-authors = ["Kai Schmidt <kaikaliischmidt@gmail.com>"]
-edition = "2018"
-categories = ["date-and-time"]
-description = "Timer types for measuring time in a program in different ways"
-documentation = "https://docs.rs/eggtimer/"
-keywords = ["timer", "time", "duration"]
-license = "MIT"
-readme = "readme.md"
+authors = ['Kai Schmidt <kaikaliischmidt@gmail.com>']
+categories = ['date-and-time']
+description = 'Timer types for measuring time in a program in different ways'
+documentation = 'https://docs.rs/eggtimer/'
+edition = '2018'
+keywords = ['timer', 'time', 'duration']
+license = 'MIT'
+name = 'eggtimer'
+readme = 'readme.md'
+version = '0.5.0'
+
+[features]
+default = []
+f64 = []

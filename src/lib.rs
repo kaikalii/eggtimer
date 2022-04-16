@@ -7,6 +7,16 @@
 //!
 //! In addition to the timer types, a collection type, [`TimedList`], is provided,
 //! which associates each element with a [`Duration`] and only retains elements whose [`Duration`] has not elapsed.
+//!
+//! By default, this crate us [`f32`] as the number type when dealing with seconds.
+//! You can enable the `f64` feature to use [`f64`] for seconds instead.
+
+/// The type for a number of seconds
+#[cfg(not(feature = "f64"))]
+pub type Seconds = f32;
+/// The type for a number of seconds
+#[cfg(feature = "f64")]
+pub type Seconds = f64;
 
 use std::time::{Duration, Instant};
 
@@ -140,8 +150,8 @@ impl Elapsed {
         self.start = Instant::now();
     }
     /// Gets the elapsed time as a floating-point number of seconds
-    pub fn seconds(self) -> f64 {
-        f64::from_duration(self.duration())
+    pub fn seconds(self) -> Seconds {
+        Seconds::from_duration(self.duration())
     }
     /// Get the elapsed time as a [`Duration`]
     pub fn duration(self) -> Duration {
@@ -183,8 +193,8 @@ impl Timer {
         self.duration.checked_sub(self.elapsed.duration())
     }
     /// Gets the time left as a floating-point number of seconds
-    pub fn seconds_left(&self) -> f64 {
-        f64::from_duration(self.duration) - self.elapsed.seconds()
+    pub fn seconds_left(&self) -> Seconds {
+        Seconds::from_duration(self.duration) - self.elapsed.seconds()
     }
     /// Checks if the set [`Duration`] has elapsed
     pub fn is_ready(self) -> bool {
@@ -192,7 +202,7 @@ impl Timer {
     }
     /// Checks if the set [`Duration`] has elapsed and returns the elapsed
     /// floating-point number of seconds if it has
-    pub fn as_ready(self) -> Option<f64> {
+    pub fn as_ready(self) -> Option<Seconds> {
         if self.is_ready() {
             Some(self.seconds())
         } else {
@@ -204,11 +214,11 @@ impl Timer {
         self.duration
     }
     /// Gets the time the [`Timer`] was originally set with as a floating-point number of seconds
-    pub fn max_seconds(&self) -> f64 {
-        f64::from_duration(self.max_duration())
+    pub fn max_seconds(&self) -> Seconds {
+        Seconds::from_duration(self.max_duration())
     }
     /// Gets the elapsed time as a floating-point number of seconds
-    pub fn seconds(&self) -> f64 {
+    pub fn seconds(&self) -> Seconds {
         self.elapsed.seconds()
     }
     /// Get the elapsed time as a [`Duration`]
@@ -227,7 +237,7 @@ impl Timer {
     /// floating-point number of seconds as a parameter and resets the timer
     pub fn tick<F, R>(&mut self, mut f: F) -> Option<R>
     where
-        F: FnMut(f64) -> R,
+        F: FnMut(Seconds) -> R,
     {
         self.as_ready().map(|dt| {
             self.reset();
@@ -269,8 +279,8 @@ impl Stopwatch {
         self.prev_dur = 0u64.to_duration();
     }
     /// Gets the elapsed time as a floating-point number of seconds
-    pub fn seconds(&self) -> f64 {
-        f64::from_duration(self.duration())
+    pub fn seconds(&self) -> Seconds {
+        Seconds::from_duration(self.duration())
     }
     /// Gets the elapsed time as a [`Duration`]
     pub fn duration(&self) -> Duration {
@@ -472,7 +482,7 @@ let elapsed = measure(|| {
 println!("Printing all those numbers took {} seconds", elapsed);
 ```
 */
-pub fn measure<F>(f: F) -> f64
+pub fn measure<F>(f: F) -> Seconds
 where
     F: FnOnce(),
 {
