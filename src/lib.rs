@@ -246,6 +246,12 @@ impl Timer {
     }
 }
 
+impl Default for Timer {
+    fn default() -> Self {
+        Timer::set(0.0)
+    }
+}
+
 /// A timer that can be paused and resumed.
 ///
 /// The reported elapsed times do not include periods when the timer was paused
