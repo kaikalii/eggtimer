@@ -1,8 +1,8 @@
 ### Description
 
-This crate provides `Rust` timer types for measuring time in a program in different ways.
-- `Timer` is a timer that counts up and knows how much time has passed since it was started.
-- `EggTimer` is a timer that counts down from its set `Duration` and knows how much time it has left.
+This crate provides Rust timer types for measuring time in a program in different ways.
+- `Elapsed` is a timer that counts up and knows how much time has passed since it was started.
+- `Timer` is a timer that counts down from its set `Duration` and knows how much time it has left.
 - `Stopwatch` is a timer that counts up and can be paused and resumed.
 
 In addition to the timer types, a collection type, `TimedList`, is provided,
@@ -20,7 +20,7 @@ eggtimer = "0.3.2"
 ### Example
 
 ```rust
-use eggtimer::Timer;
+use eggtimer::Elapsed;
 
 fn computation() {
     // Do some computation that takes some time.
@@ -28,13 +28,13 @@ fn computation() {
 
 fn main() {
     // Start the timer
-    let timer = Timer::start();
+    let timer = Elapsed::start();
 
     // Do a computation
     computation();
 
     // Check how long it took
-    let elapsed = timer.elapsed();
+    let elapsed = timer.get();
     println!("The computation took {} seconds.", elapsed);
 }
 ```
